@@ -15,6 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wpf", "Wpf\Wpf.csproj", "{C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeOvdPresentatation", "MakeOvdPresentatation\MakeOvdPresentatation.csproj", "{ADFBCF9E-0F0E-4191-BCB7-549AC38FB9F7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{BED225A5-4794-4BD6-8808-CCFF7041CB64}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\log4net.config = Configuration\log4net.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "General", "General\General.csproj", "{AFE6EA7E-3C3D-4098-8516-F7E64F7EA004}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +52,10 @@ Global
 		{ADFBCF9E-0F0E-4191-BCB7-549AC38FB9F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADFBCF9E-0F0E-4191-BCB7-549AC38FB9F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADFBCF9E-0F0E-4191-BCB7-549AC38FB9F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE6EA7E-3C3D-4098-8516-F7E64F7EA004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE6EA7E-3C3D-4098-8516-F7E64F7EA004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE6EA7E-3C3D-4098-8516-F7E64F7EA004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE6EA7E-3C3D-4098-8516-F7E64F7EA004}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
