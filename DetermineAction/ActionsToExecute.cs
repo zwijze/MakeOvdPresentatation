@@ -29,7 +29,7 @@ namespace DetermineActions
         public static void intialActions(String directoryName)
         {
             //Create Quick access item for directory of presentation
-            String script = @"powershell C:\Users\frank\source\Repos\MakeOvdPresentatation\MakeOvdPresentatation\bin\Debug\Scripts\quickAccessAdd.ps1 -directoryName '" + directoryName + "'";
+            String script = @"powershell Scripts\quickAccessAdd.ps1 -directoryName '" + directoryName + "'";
             //String script = @"powershell -executionpolicy -bypass";
             GeneralFunctions.executeCmdCommand(script);
             log.Info("Created Quick Access link:" + Regex.Match(directoryName, @".*\\(.*)").Groups[1].Value);

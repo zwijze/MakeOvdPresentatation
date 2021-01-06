@@ -36,6 +36,19 @@ namespace MakeOvdPresentatation
             TextInput.readText(ConfigurationManager.AppSettings["filenameReadingText"]);
             Dictionary<int, String> textLines = TextInput.TextLines;
 
+            String goOnYN;
+            if (textLines.Count <= 1)
+            {
+                Console.WriteLine("Not many Liturgy text is being selected. Do you want to continue (y/n)?");
+                goOnYN = Console.ReadLine().ToLower();
+                if (goOnYN.Equals("n"))
+                {
+                    Console.WriteLine("Program will stop. Press enter to exit.");
+                    Console.ReadLine().ToLower();
+                    Environment.Exit(1);
+                }
+            }
+
             //Execute intial actions like copying the forst Powerpoint sheet
             ActionsToExecute.intialActions(directoryName);
 
@@ -65,7 +78,7 @@ namespace MakeOvdPresentatation
             }
 
             //Manually add Powerpoint presentation file
-            String goOnYN = "y";
+            goOnYN = "y";
             String powerpointTemplateFile= ConfigurationManager.AppSettings["powerpointTemplateFile"];
             while (goOnYN.ToLower().Equals("y")) {
                 Console.WriteLine("Do you want to add more powerpoint presentation files to the presentation directory (y/n)?");
