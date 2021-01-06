@@ -11,6 +11,7 @@ using log4net.Repository.Hierarchy;
 using log4net;
 using System.Threading;
 using DetermineActions;
+using System.IO;
 
 namespace MakeOvdPresentatation
 {
@@ -46,8 +47,8 @@ namespace MakeOvdPresentatation
                 order = order + 10;
                 String textLineValue = textLine.Value;
                 int textLineKey = textLine.Key;
-                String previousTextLineValue = textLineKey==1?"":textLines[textLineKey -1];
-                String nextTextLineValue = textLines.Count== textLineKey?"":textLines[textLineKey + 1];
+                String previousTextLineValue = textLineKey == 1 ? "" : textLines[textLineKey - 1];
+                String nextTextLineValue = textLines.Count == textLineKey ? "" : textLines[textLineKey + 1];
                 Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
                 List<String> ActionsToExecuteWrapperParameters = new List<String>();
                 ActionsToExecuteWrapperParameters.Add(order.ToString());
@@ -62,6 +63,22 @@ namespace MakeOvdPresentatation
             {
                 thread.Join();
             }
+
+            //Manually add Powerpoint presentation file
+            String goOnYN = "y";
+            String powerpointTemplateFile= ConfigurationManager.AppSettings["powerpointTemplateFile"];
+            while (goOnYN.ToLower().Equals("y")) {
+                Console.WriteLine("Do you want to add more powerpoint presentation files to the presentation directory (y/n)?");
+                goOnYN = Console.ReadLine().ToLower();
+                if (goOnYN.Equals("y"))
+                {
+                    Console.WriteLine("Specify filename of the Powerpoint presentation file:");
+                    String fileName = Console.ReadLine();
+                    File.Copy(powerpointTemplateFile, directoryName+ @"\" + fileName);
+                    Console.WriteLine("Copied Powerpoint presentation file (do manually edit yourselve): " + fileName);
+                }
+            }
+
         }
 
         private static void ExecuteScripts(object data)

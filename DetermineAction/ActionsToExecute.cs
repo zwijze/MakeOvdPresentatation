@@ -28,14 +28,21 @@ namespace DetermineActions
 
         public static void intialActions(String directoryName)
         {
+            //Create Quick access item for directory of presentation
+            String script = @"powershell C:\Users\frank\source\Repos\MakeOvdPresentatation\MakeOvdPresentatation\bin\Debug\Scripts\quickAccessAdd.ps1 -directoryName '" + directoryName + "'";
+            //String script = @"powershell -executionpolicy -bypass";
+            GeneralFunctions.executeCmdCommand(script);
+            log.Info("Created Quick Access link:" + Regex.Match(directoryName, @".*\\(.*)").Groups[1].Value);
+
             //Copy First Powerpoint of presentation
             DateTime previousSunday = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
             String directoryNamePreviousSunday = Regex.Match(directoryName, @"(.*)\\(.*)").Groups[1].Value + "\\" + previousSunday.Year.ToString() + "-" + previousSunday.Month.ToString().PadLeft(2, '0') + "-" + previousSunday.Day.ToString().PadLeft(2, '0');
-            String fileToCopy = directoryNamePreviousSunday + "\\0-Voor de dienst.ppt";
-            if (Directory.Exists(directoryName) && File.Exists(fileToCopy))
+            String fileCopyFrom = directoryNamePreviousSunday + "\\0-Voor de dienst.ppt";
+            String fileCopyTo = directoryName + "\\0-Voor de dienst.ppt";
+            if (Directory.Exists(directoryName) && File.Exists(fileCopyFrom) && !File.Exists(fileCopyTo))
             {
                 log.Info("Copying file 0-Voor de dienst.ppt from previous service...");
-                File.Copy(fileToCopy, directoryName + "\\0-Voor de dienst.ppt");
+                File.Copy(fileCopyFrom, fileCopyTo);
             }
         }
 
