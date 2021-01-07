@@ -50,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Actions\Actions.csproj">
+      <Project>{443a92bd-b035-4033-9187-ef876d4a81ec}</Project>
+      <Name>Actions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\General\General.csproj">
       <Project>{afe6ea7e-3c3d-4098-8516-f7e64f7ea004}</Project>
       <Name>General</Name>

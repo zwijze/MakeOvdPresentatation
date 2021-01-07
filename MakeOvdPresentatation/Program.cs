@@ -43,9 +43,7 @@ namespace MakeOvdPresentatation
                 goOnYN = Console.ReadLine().ToLower();
                 if (goOnYN.Equals("n"))
                 {
-                    Console.WriteLine("Program will stop. Press enter to exit.");
-                    Console.ReadLine().ToLower();
-                    Environment.Exit(1);
+                    ExitProgram();
                 }
             }
 
@@ -89,14 +87,16 @@ namespace MakeOvdPresentatation
                     String fileName = Console.ReadLine();
                     File.Copy(powerpointTemplateFile, directoryName+ @"\" + fileName);
                     Console.WriteLine("Copied Powerpoint presentation file (do manually edit yourselve): " + fileName);
+                    System.Diagnostics.Process.Start(directoryName + @"\" + fileName);
                 }
+                ExitProgram();
             }
-
         }
-
-        private static void ExecuteScripts(object data)
+        private static void ExitProgram()
         {
-            int i = 1;
+            Console.WriteLine("Program will stop. Press enter to exit.");
+            Console.ReadLine().ToLower();
+            Environment.Exit(1);
         }
     }
 }

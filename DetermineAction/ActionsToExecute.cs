@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using General;
 using log4net.Config;
 using log4net;
+using Actions;
 
 namespace DetermineActions
 {
@@ -21,9 +22,16 @@ namespace DetermineActions
             String lineNext = ActionsListParameters[3];
             String directoryName = ActionsListParameters[4];
 
-            Boolean actionExecuted;
+            Boolean actionExecuted=false;
             //Download Youtube
             actionExecuted=DownLoadYouTube(order, line, directoryName);
+
+            if (actionExecuted == false)
+            {
+                actionExecuted = DownLoadSongs(order, line, directoryName);
+            }
+
+
         }
 
         public static void intialActions(String directoryName)
@@ -43,7 +51,14 @@ namespace DetermineActions
             {
                 log.Info("Copying file 0-Voor de dienst.ppt from previous service...");
                 File.Copy(fileCopyFrom, fileCopyTo);
+                System.Diagnostics.Process.Start(fileCopyTo);
             }
+        }
+
+        private static bool DownLoadSongs(String order, String line, String directoryName)
+        {
+            LiedBoek _liedBoek= new LiedBoek();
+            return true;
         }
 
         private static bool DownLoadYouTube(String order,String line,String directoryName)
