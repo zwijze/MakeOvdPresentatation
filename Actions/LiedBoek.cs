@@ -1,26 +1,34 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AngleSharp;
-using AngleSharp.Html.Dom;
-using AngleSharp.Html.Parser;
+using Actions.HelperClasses;
 
 namespace Actions
 {
     public class LiedBoek:IGetSong
     {
-        HttpClient client;
+        IWebDriver currentWebDriver;
+        BrowserContext browserContext;
         public LiedBoek()
         {
-            client = new HttpClient();
-
+            browserContext = new BrowserContext();
+            currentWebDriver = browserContext.WebDriver;
         }
 
-        public Boolean Login()
+        public Boolean Start(String url)
         {
+            currentWebDriver.Url = url;
+            return true;
+        }
+        public Boolean Login(String loginName,String password)
+        {
+            currentWebDriver.FindElement(By.Name("txtEmail")).SendKeys(loginName);
+            currentWebDriver.FindElement(By.Name("txtPassword")).SendKeys(password);
+            currentWebDriver.FindElement(By.XPath("//input[@value='Inloggen']")).Click();
             return true;
         }
 
@@ -37,24 +45,10 @@ namespace Actions
             return true;
         }
 
-        private async Task createTask()
+        public Boolean Quit()
         {
-            // Call asynchronous network methods in a try/catch block to handle exceptions.
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync("http://www.contoso.com/");
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                // Above three lines can be replaced with new helper method below
-                // string responseBody = await client.GetStringAsync(uri);
-
-                Console.WriteLine(responseBody);
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine("\nException Caught!");
-                Console.WriteLine("Message :{0} ", e.Message);
-            }
+            browserContext.Quit();
+            return true;
         }
     }
 }

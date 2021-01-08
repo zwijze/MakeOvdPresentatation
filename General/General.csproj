@@ -46,6 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Add.cs" />
+    <Compile Include="Configuration\AddCollection.cs" />
+    <Compile Include="Configuration\Section.cs" />
+    <Compile Include="Configuration\SectionCollection.cs" />
+    <Compile Include="Configuration\SectionCollectionElement.cs" />
     <Compile Include="GeneralFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

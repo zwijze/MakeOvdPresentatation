@@ -7,6 +7,8 @@ using General;
 using log4net.Config;
 using log4net;
 using Actions;
+using General.Config;
+using System.Linq;
 
 namespace DetermineActions
 {
@@ -28,7 +30,7 @@ namespace DetermineActions
 
             if (actionExecuted == false)
             {
-                actionExecuted = DownLoadSongs(order, line, directoryName);
+                actionExecuted = DownLoadSongs(order, line, lineNext, directoryName);
             }
 
 
@@ -55,26 +57,48 @@ namespace DetermineActions
             }
         }
 
-        private static bool DownLoadSongs(String order, String line, String directoryName)
+        private static bool DownLoadSongs(String order, String line,String lineNext, String directoryName)
         {
-            LiedBoek _liedBoek= new LiedBoek();
-            return true;
+            //Retrieve Liedboek  song
+            if (!line.ToLower().Contains("youtube.com") && !lineNext.ToLower().Contains("youtube.com") && Regex.Match(line.ToLower(), @"lied\s+\d+").Success)
+            {
+                var section = (General.Config.Section)ConfigurationManager.GetSection("SongsSection");
+                IEnumerable<SectionCollectionElement> sectionCollectionMembers = section.SectionCollectionMembers.Cast<SectionCollectionElement>();
+                List<Add> addCollectionMembersList =GetaddCollectionMembersList(sectionCollectionMembers, "LiedBoek");
+                String url = addCollectionMembersList.First(k => k.key.Equals("url")).value;
+                LiedBoek _liedBoek = new LiedBoek();
+                _liedBoek.Start(url);
+                String loginName = addCollectionMembersList.First(k => k.key.Equals("loginName")).value;
+                String password = addCollectionMembersList.First(k => k.key.Equals("password")).value;
+                _liedBoek.Login(loginName,password);
+                String song = Regex.Match(line.ToLower(), @"lied\s+(\d+)").Groups[1].Value;
+                List<String> songNumbers= Regex.Match(line.ToLower(), @"lied\s+\d+:(.*?)[A-Z]").Groups[1].Value.Split(',').ToList();
+                _liedBoek.Quit();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private static bool DownLoadYouTube(String order,String line,String directoryName)
         {
-            if (line.Contains("youtube.com"))
-            {
-                String youtubeDownloadApplication = ConfigurationManager.AppSettings["youtubeDownloadApplication"];
-                String url = line.ToLower().Contains(@"https://")? @"https://" + Regex.Match(line, @".*?(?i)https(?-i)://(.*?)(\s|$).*").Groups[1].Value : "www" + Regex.Match(line, @".*?(?i)www(?-i)(.*?)(\s|$).*").Groups[1].Value;
-                String script = youtubeDownloadApplication + " -f best --output \"" + directoryName + "\\"  + order + "_%(title)s.%(ext)s\" " + url;
-                log.Info("Downloading url: " + url + "  ...");
-                GeneralFunctions.executeCmdCommand(script);
-                return true;
-            } else
-            {
-                return false;
-            }
+            if (!line.ToLower().Contains("youtube.com")) return false;
+
+            String youtubeDownloadApplication = ConfigurationManager.AppSettings["youtubeDownloadApplication"];
+            String url = line.ToLower().Contains(@"https://")? @"https://" + Regex.Match(line, @".*?(?i)https(?-i)://(.*?)(\s|$).*").Groups[1].Value : "www" + Regex.Match(line, @".*?(?i)www(?-i)(.*?)(\s|$).*").Groups[1].Value;
+            String script = youtubeDownloadApplication + " -f best --output \"" + directoryName + "\\"  + order + "_%(title)s.%(ext)s\" " + url;
+            log.Info("Downloading url: " + url + "  ...");
+            GeneralFunctions.executeCmdCommand(script);
+            return true;
+        }
+
+        private static List<Add> GetaddCollectionMembersList(IEnumerable<SectionCollectionElement> sectionCollectionMembers,String keyValue)
+        {
+            SectionCollectionElement sectionCollectionMember = sectionCollectionMembers.First(m => m.key.Equals(keyValue));
+            IEnumerable<Add> addCollectionMembers = sectionCollectionMember.AddCollectionMembers.Cast<Add>();
+            return addCollectionMembers.ToList();
         }
     }
 }

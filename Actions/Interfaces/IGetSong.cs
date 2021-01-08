@@ -8,7 +8,8 @@ namespace Actions
 {
     interface IGetSong
     {
-        Boolean Login();
+        Boolean Start(String url);
+        Boolean Login(String loginName, String password);
 
         Boolean SearchSong();
 
