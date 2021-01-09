@@ -72,7 +72,11 @@ namespace DetermineActions
                 String password = addCollectionMembersList.First(k => k.key.Equals("password")).value;
                 _liedBoek.Login(loginName,password);
                 String song = Regex.Match(line.ToLower(), @"lied\s+(\d+)").Groups[1].Value;
-                List<String> songNumbers= Regex.Match(line.ToLower(), @"lied\s+\d+:(.*?)[A-Z]").Groups[1].Value.Split(',').ToList();
+                String regexSearchStringForSongs = addCollectionMembersList.First(k => k.key.Equals("regexSearchStringForSongs")).value;
+                List<String> songNumbers = Regex.Match(line.ToLower(), @regexSearchStringForSongs).Groups[1].Value.Replace(" " ,"" ).Replace("-", ",").Split(',').ToList();
+                String downloadDirectory = addCollectionMembersList.First(k => k.key.Equals("downloadDirectory")).value;
+                String waitToDownloadFile = addCollectionMembersList.First(k => k.key.Equals("waitToDownloadFile")).value;
+                _liedBoek.SearchSong(song, songNumbers, downloadDirectory, directoryName,order, waitToDownloadFile);
                 _liedBoek.Quit();
                 return true;
             }

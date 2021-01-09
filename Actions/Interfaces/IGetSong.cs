@@ -10,11 +10,6 @@ namespace Actions
     {
         Boolean Start(String url);
         Boolean Login(String loginName, String password);
-
-        Boolean SearchSong();
-
-        Boolean DownloadSong();
-
-        Boolean ExtractSong();
+        Boolean SearchSong(String song, List<String> songNumbers, String downloadDirectory, String directoryName,String order,String waitToDownloadFile);
     }
 }

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using log4net.Config;
 using log4net;
 using System.Text.RegularExpressions;
+using System.IO.Compression;
 
 namespace General
 {
@@ -62,6 +63,21 @@ namespace General
                 Console.ReadLine().ToLower();
                 Environment.Exit(1);
             }
+        }
+
+        public static void DeleteFiles(String filePattern, String directoryName)
+        {
+            String[] files = Directory.GetFiles(directoryName, filePattern);
+
+            foreach (String file in files)
+            {
+                File.Delete(file);
+            }
+        }
+
+        public static void UnzipFiles(String file, String directoryName)
+        {
+            ZipFile.ExtractToDirectory(file, directoryName);
         }
     }
 }
