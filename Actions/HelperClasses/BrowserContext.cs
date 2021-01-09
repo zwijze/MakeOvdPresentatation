@@ -12,7 +12,7 @@ namespace Actions.HelperClasses
 {
     class BrowserContext
     {
-        private static Lazy<IWebDriver> webDriver = CreateLazyWebDriver();
+        private Lazy<IWebDriver> webDriver = CreateLazyWebDriver();
 
         private static Lazy<IWebDriver> CreateLazyWebDriver()
         {
@@ -68,7 +68,7 @@ namespace Actions.HelperClasses
             }
         }
 
-        private static bool GetIsInitialized()
+        private bool GetIsInitialized()
         {
             return webDriver.IsValueCreated;
         }

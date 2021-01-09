@@ -57,8 +57,9 @@ namespace Actions
                     Directory.Delete(extractDirectory);
                 }
 
-                currentWebDriver.FindElement(By.Name("txtSearch")).SendKeys(song+":"+ songNumber);
+                currentWebDriver.FindElement(By.Name("txtSearch")).SendKeys(song+ (songNumber.Equals("")?"":":") + songNumber);
                 currentWebDriver.FindElement(By.XPath("//a[@class='focusButton btnSearch']")).Click();
+                Thread.Sleep(3000);
                 currentWebDriver.FindElement(By.Id("selectsong")).Click();
                 currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")).Click();
                 currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")).Click();
