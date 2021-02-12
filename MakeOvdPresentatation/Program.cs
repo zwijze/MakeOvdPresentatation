@@ -12,6 +12,7 @@ using log4net;
 using System.Threading;
 using DetermineActions;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace MakeOvdPresentatation
 {
@@ -60,15 +61,23 @@ namespace MakeOvdPresentatation
                 int textLineKey = textLine.Key;
                 String previousTextLineValue = textLineKey == 1 ? "" : textLines[textLineKey - 1];
                 String nextTextLineValue = textLines.Count == textLineKey ? "" : textLines[textLineKey + 1];
-                Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
-                List<String> ActionsToExecuteWrapperParameters = new List<String>();
-                ActionsToExecuteWrapperParameters.Add(order.ToString());
-                ActionsToExecuteWrapperParameters.Add(textLineValue);
-                ActionsToExecuteWrapperParameters.Add(previousTextLineValue);
-                ActionsToExecuteWrapperParameters.Add(nextTextLineValue);
-                ActionsToExecuteWrapperParameters.Add(directoryName);
-                newThread.Start(ActionsToExecuteWrapperParameters);
-                threadList.Add(newThread);
+                //Downloading songs online should not be done parallel, because otherwise the 2 downaloads will interfere
+                if (!textLineValue.ToLower().Contains("youtube.com") && !nextTextLineValue.ToLower().Contains("youtube.com") && Regex.Match(textLineValue.ToLower(), @"lied\s+\d+").Success)
+                {
+                    ActionsToExecute.DownLoadSongs(order.ToString(), textLineValue, nextTextLineValue, directoryName);
+                } else
+                {
+                    Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
+                    List<String> ActionsToExecuteWrapperParameters = new List<String>();
+                    ActionsToExecuteWrapperParameters.Add(order.ToString());
+                    ActionsToExecuteWrapperParameters.Add(textLineValue);
+                    ActionsToExecuteWrapperParameters.Add(previousTextLineValue);
+                    ActionsToExecuteWrapperParameters.Add(nextTextLineValue);
+                    ActionsToExecuteWrapperParameters.Add(directoryName);
+                    newThread.Start(ActionsToExecuteWrapperParameters);
+                    threadList.Add(newThread);
+                }
+
             }
             foreach (Thread thread in threadList)
             {

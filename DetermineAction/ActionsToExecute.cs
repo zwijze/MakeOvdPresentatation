@@ -28,10 +28,10 @@ namespace DetermineActions
             //Download Youtube
             actionExecuted=DownLoadYouTube(order, line, directoryName);
 
-            if (actionExecuted == false)
+            /*if (actionExecuted == false)
             {
                 actionExecuted = DownLoadSongs(order, line, lineNext, directoryName);
-            }
+            }*/
 
 
         }
@@ -57,7 +57,7 @@ namespace DetermineActions
             }
         }
 
-        private static bool DownLoadSongs(String order, String line,String lineNext, String directoryName)
+        public static bool DownLoadSongs(String order, String line,String lineNext, String directoryName)
         {
             //Retrieve Liedboek  song
             if (!line.ToLower().Contains("youtube.com") && !lineNext.ToLower().Contains("youtube.com") && Regex.Match(line.ToLower(), @"lied\s+\d+").Success)

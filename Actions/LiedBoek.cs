@@ -17,6 +17,7 @@ namespace Actions
     {
         IWebDriver currentWebDriver;
         BrowserContext browserContext;
+
         public LiedBoek()
         {
             browserContext = new BrowserContext();
@@ -38,43 +39,43 @@ namespace Actions
 
         public Boolean SearchSong(String song,List<String> songNumbers, String downloadDirectory, String directoryName,String order,String waitToDownloadFile)
         {
-            if (!Directory.Exists(downloadDirectory))
-            {
-                throw new InvalidOperationException("Specify an existing root directory");
-
-            }
-            else
-            {
-
-            }
-            foreach (String songNumber in songNumbers)
-            {
-                GeneralFunctions.DeleteFiles("Standaard_liedlijst*.zip", downloadDirectory);
-                String extractDirectory = downloadDirectory + @"\Standaard_liedlijst";
-                if (Directory.Exists(extractDirectory))
+            //Only one thread should download it's own song, but when same threads want to download at the same time both browser will have both downloads.
+                if (!Directory.Exists(downloadDirectory))
                 {
-                    GeneralFunctions.DeleteFiles("*.*", extractDirectory);
-                    Directory.Delete(extractDirectory);
+                    throw new InvalidOperationException("Specify an existing root directory");
                 }
 
-                currentWebDriver.FindElement(By.Name("txtSearch")).SendKeys(song+ (songNumber.Equals("")?"":":") + songNumber);
-                currentWebDriver.FindElement(By.XPath("//a[@class='focusButton btnSearch']")).Click();
-                Thread.Sleep(3000);
-                currentWebDriver.FindElement(By.Id("selectsong")).Click();
-                currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")).Click();
-                currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")).Click();
-                currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
-                currentWebDriver.FindElement(By.XPath("//a[@href='https://liedboek.liedbundels.nu/download/liedlijsten/l12991/Standaard_liedlijst.zip']")).Click();
-                //Wait for downloading file
-                Thread.Sleep(Convert.ToInt32(waitToDownloadFile) *1000);
-                GeneralFunctions.UnzipFiles(downloadDirectory+ @"\"+ "Standaard_liedlijst.zip", extractDirectory);
-                GeneralFunctions.DeleteFiles(@"Liedboek-licentie.txt", extractDirectory);
-                //File.Copy
-                foreach (String file in Directory.GetFiles(extractDirectory))
-                    File.Copy(file, Path.Combine(directoryName, order + "_" + Path.GetFileName(file)));
+                foreach (String songNumber in songNumbers)
+                {
 
-            }
-            return true;
+                    GeneralFunctions.DeleteFiles("Standaard_liedlijst*.zip", downloadDirectory);
+                    String extractDirectory = downloadDirectory + @"\Standaard_liedlijst";
+                    if (Directory.Exists(extractDirectory))
+                    {
+                        GeneralFunctions.DeleteFiles("*.*", extractDirectory);
+                        Directory.Delete(extractDirectory);
+                    }
+
+                    currentWebDriver.FindElement(By.Name("txtSearch")).SendKeys(song+ (songNumber.Equals("")?"":":") + songNumber);
+                    currentWebDriver.FindElement(By.XPath("//a[@class='focusButton btnSearch']")).Click();
+                    Thread.Sleep(3000);
+                    currentWebDriver.FindElement(By.Id("selectsong")).Click();
+                    currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")).Click();
+                    currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")).Click();
+             
+
+
+                    currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
+                    currentWebDriver.FindElement(By.XPath("//a[@href='https://liedboek.liedbundels.nu/download/liedlijsten/l12991/Standaard_liedlijst.zip']")).Click();
+                    //Wait for downloading file
+                    Thread.Sleep(Convert.ToInt32(waitToDownloadFile) * 1000);
+                    GeneralFunctions.UnzipFiles(downloadDirectory + @"\" + "Standaard_liedlijst.zip", extractDirectory);
+                    GeneralFunctions.DeleteFiles(@"Liedboek-licentie.txt", extractDirectory);
+                    //File.Copy
+                    foreach (String file in Directory.GetFiles(extractDirectory))
+                    File.Copy(file, Path.Combine(directoryName, order + "_" + Path.GetFileName(file)));
+                }
+                return true;
         }
 
         public Boolean ExtractSong()
