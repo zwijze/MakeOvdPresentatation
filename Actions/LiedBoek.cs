@@ -62,10 +62,13 @@ namespace Actions
                     currentWebDriver.FindElement(By.Id("selectsong")).Click();
                     currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")).Click();
                     currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")).Click();
-             
-
-
-                    currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
+                    try
+                    {
+                        currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
+                    } catch (NoSuchElementException e){
+                        currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnStartDownload']")).Click();
+                        currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
+                    }
                     currentWebDriver.FindElement(By.XPath("//a[@href='https://liedboek.liedbundels.nu/download/liedlijsten/l12991/Standaard_liedlijst.zip']")).Click();
                     //Wait for downloading file
                     Thread.Sleep(Convert.ToInt32(waitToDownloadFile) * 1000);

@@ -52,11 +52,9 @@ namespace MakeOvdPresentatation
             ActionsToExecute.intialActions(directoryName);
 
             //For each line determine if the lines fullfills the requirement to execute an action is needed and if so execute the action
-            int order = 10;
             List<Thread> threadList = new List<Thread>();
             foreach (KeyValuePair<int, string> textLine in textLines)
             {
-                order = order + 10;
                 String textLineValue = textLine.Value;
                 int textLineKey = textLine.Key;
                 String previousTextLineValue = textLineKey == 1 ? "" : textLines[textLineKey - 1];
@@ -64,12 +62,11 @@ namespace MakeOvdPresentatation
                 //Downloading songs online should not be done parallel, because otherwise the 2 downaloads will interfere
                 if (!textLineValue.ToLower().Contains("youtube.com") && !nextTextLineValue.ToLower().Contains("youtube.com") && Regex.Match(textLineValue.ToLower(), @"lied\s+\d+").Success)
                 {
-                    ActionsToExecute.DownLoadSongs(order.ToString(), textLineValue, nextTextLineValue, directoryName);
+                    ActionsToExecute.DownLoadSongs(textLineValue, nextTextLineValue, directoryName);
                 } else
                 {
                     Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
                     List<String> ActionsToExecuteWrapperParameters = new List<String>();
-                    ActionsToExecuteWrapperParameters.Add(order.ToString());
                     ActionsToExecuteWrapperParameters.Add(textLineValue);
                     ActionsToExecuteWrapperParameters.Add(previousTextLineValue);
                     ActionsToExecuteWrapperParameters.Add(nextTextLineValue);

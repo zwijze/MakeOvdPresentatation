@@ -14,19 +14,20 @@ namespace DetermineActions
 {
     public class ActionsToExecute
     {
+        private static int order = 0;
         private static readonly ILog log = LogManager.GetLogger(typeof(GeneralFunctions));
         public static void ActionsToExecuteWrapper(object data)
         {
             List<String> ActionsListParameters = (List<String>)data;
-            String order = ActionsListParameters[0];
-            String line = ActionsListParameters[1];
-            String linePrevious = ActionsListParameters[2];
-            String lineNext = ActionsListParameters[3];
-            String directoryName = ActionsListParameters[4];
+            String line = ActionsListParameters[0];
+            String linePrevious = ActionsListParameters[1];
+            String lineNext = ActionsListParameters[2];
+            String directoryName = ActionsListParameters[3];
 
             Boolean actionExecuted=false;
             //Download Youtube
-            actionExecuted=DownLoadYouTube(order, line, directoryName);
+
+            actionExecuted =DownLoadYouTube(line, directoryName);
 
             /*if (actionExecuted == false)
             {
@@ -57,11 +58,12 @@ namespace DetermineActions
             }
         }
 
-        public static bool DownLoadSongs(String order, String line,String lineNext, String directoryName)
+        public static bool DownLoadSongs(String line,String lineNext, String directoryName)
         {
             //Retrieve Liedboek  song
             if (!line.ToLower().Contains("youtube.com") && !lineNext.ToLower().Contains("youtube.com") && Regex.Match(line.ToLower(), @"lied\s+\d+").Success)
             {
+                order = order + 10;
                 var section = (General.Config.Section)ConfigurationManager.GetSection("SongsSection");
                 IEnumerable<SectionCollectionElement> sectionCollectionMembers = section.SectionCollectionMembers.Cast<SectionCollectionElement>();
                 List<Add> addCollectionMembersList =GetaddCollectionMembersList(sectionCollectionMembers, "LiedBoek");
@@ -71,12 +73,13 @@ namespace DetermineActions
                 String loginName = addCollectionMembersList.First(k => k.key.Equals("loginName")).value;
                 String password = addCollectionMembersList.First(k => k.key.Equals("password")).value;
                 _liedBoek.Login(loginName,password);
-                String song = Regex.Match(line.ToLower(), @"lied\s+(\d+.?)").Groups[1].Value;
                 String regexSearchStringForSongs = addCollectionMembersList.First(k => k.key.Equals("regexSearchStringForSongs")).value;
-                List<String> songNumbers = Regex.Match(line.ToLower(), @regexSearchStringForSongs).Groups[1].Value.Replace(" " ,"" ).Replace("-", ",").Split(',').ToList();
+                String song = Regex.Match(line.ToLower(), @regexSearchStringForSongs).Groups[1].Value;
+                String regexSearchStringForSongsNumbers = addCollectionMembersList.First(k => k.key.Equals("regexSearchStringForSongsNumbers")).value;
+                List<String> songNumbers = Regex.Match(line.ToLower(), @regexSearchStringForSongsNumbers).Groups[1].Value.Replace(" " ,"" ).Replace("-", ",").Split(',').ToList();
                 String downloadDirectory = addCollectionMembersList.First(k => k.key.Equals("downloadDirectory")).value;
                 String waitToDownloadFile = addCollectionMembersList.First(k => k.key.Equals("waitToDownloadFile")).value;
-                _liedBoek.SearchSong(song, songNumbers, downloadDirectory, directoryName,order, waitToDownloadFile);
+                _liedBoek.SearchSong(song, songNumbers, downloadDirectory, directoryName,order.ToString(),waitToDownloadFile);
                 _liedBoek.Quit();
                 return true;
             }
@@ -86,10 +89,10 @@ namespace DetermineActions
             }
         }
 
-        private static bool DownLoadYouTube(String order,String line,String directoryName)
+        private static bool DownLoadYouTube(String line,String directoryName)
         {
             if (!line.ToLower().Contains("youtube.com")) return false;
-
+            order = order + 10;
             String youtubeDownloadApplication = ConfigurationManager.AppSettings["youtubeDownloadApplication"];
             String url = line.ToLower().Contains(@"https://")? @"https://" + Regex.Match(line, @".*?(?i)https(?-i)://(.*?)(\s|$).*").Groups[1].Value : "www" + Regex.Match(line, @".*?(?i)www(?-i)(.*?)(\s|$).*").Groups[1].Value;
             String script = youtubeDownloadApplication + " -f best --output \"" + directoryName + "\\"  + order + "_%(title)s.%(ext)s\" " + url;
