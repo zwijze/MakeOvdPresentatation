@@ -70,15 +70,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
-    <None Include="App.Debug.config">
+    <Content Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
-    </None>
-    <None Include="App.Production.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App.Production.config">
       <DependentUpon>App.config</DependentUpon>
-    </None>
-    <None Include="App.Release.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
