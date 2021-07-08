@@ -48,13 +48,19 @@ namespace DetermineActions
             //Copy First Powerpoint of presentation
             DateTime previousSunday = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
             String directoryNamePreviousSunday = Regex.Match(directoryName, @"(.*)\\(.*)").Groups[1].Value + "\\" + previousSunday.Year.ToString() + "-" + previousSunday.Month.ToString().PadLeft(2, '0') + "-" + previousSunday.Day.ToString().PadLeft(2, '0');
-            String fileCopyFrom = directoryNamePreviousSunday + "\\0-Voor de dienst.ppt";
-            String fileCopyTo = directoryName + "\\0-Voor de dienst.ppt";
-            if (Directory.Exists(directoryName) && File.Exists(fileCopyFrom) && !File.Exists(fileCopyTo))
+            List<String> filesToCopy = Directory.GetFiles(directoryNamePreviousSunday).Where(f=>f.ToLower().Contains("dienst") && f.Contains("ppt")).ToList();
+            foreach (String file in filesToCopy)
             {
-                log.Info("Copying file 0-Voor de dienst.ppt from previous service...");
-                File.Copy(fileCopyFrom, fileCopyTo);
-                System.Diagnostics.Process.Start(fileCopyTo);
+                String fileCopyFrom = file;
+                String fileNameToCopy = Regex.Match(fileCopyFrom, @".*\\(.*)").Groups[1].Value;
+                String fileCopyTo = directoryName + "\\" + fileNameToCopy;
+
+                if (Directory.Exists(directoryName) && File.Exists(fileCopyFrom) && !File.Exists(fileCopyTo))
+                {
+                    log.Info("Copying file " + fileNameToCopy + " from previous service...");
+                    File.Copy(fileCopyFrom, fileCopyTo);
+                    System.Diagnostics.Process.Start(fileCopyTo);
+                }
             }
         }
 

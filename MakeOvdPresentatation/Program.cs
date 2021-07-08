@@ -91,11 +91,14 @@ namespace MakeOvdPresentatation
                 {
                     Console.WriteLine("Specify filename of the Powerpoint presentation file:");
                     String fileName = Console.ReadLine();
-                    File.Copy(powerpointTemplateFile, directoryName+ @"\" + fileName);
+                    File.Copy(powerpointTemplateFile, directoryName + @"\" + fileName);
                     Console.WriteLine("Copied Powerpoint presentation file (do manually edit yourselve): " + fileName);
                     System.Diagnostics.Process.Start(directoryName + @"\" + fileName);
                 }
-                ExitProgram();
+                else
+                {
+                    ExitProgram();
+                }
             }
         }
         private static void ExitProgram()
