@@ -65,7 +65,7 @@ namespace Actions
                     try
                     {
                         currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
-                    } catch (NoSuchElementException e){
+                    } catch (NoSuchElementException){
                         currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnStartDownload']")).Click();
                         currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
                     }
