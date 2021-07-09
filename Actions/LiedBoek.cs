@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,8 @@ namespace Actions
         public Boolean SearchSong(String song,List<String> songNumbers, String downloadDirectory, String directoryName,String order,String waitToDownloadFile)
         {
             //Only one thread should download it's own song, but when same threads want to download at the same time both browser will have both downloads.
+            try
+            {
                 if (!Directory.Exists(downloadDirectory))
                 {
                     throw new InvalidOperationException("Specify an existing root directory");
@@ -56,29 +59,51 @@ namespace Actions
                         Directory.Delete(extractDirectory);
                     }
 
-                    currentWebDriver.FindElement(By.Name("txtSearch")).SendKeys(song+ (songNumber.Equals("")?"":":") + songNumber);
+                    var wait = new WebDriverWait(currentWebDriver, TimeSpan.FromSeconds(5));
+
+                    IWebElement txtSearch = wait.Until(drv => drv.FindElement(By.Name("txtSearch")));
+                    txtSearch.SendKeys(song + (songNumber.Equals("") ? "" : ":") + songNumber);
                     currentWebDriver.FindElement(By.XPath("//a[@class='focusButton btnSearch']")).Click();
-                    Thread.Sleep(3000);
-                    currentWebDriver.FindElement(By.Id("selectsong")).Click();
-                    currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")).Click();
-                    currentWebDriver.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")).Click();
+
+                    IWebElement selectsong = wait.Until(drv => drv.FindElement(By.Id("selectsong")));
+                    selectsong.Click();
+
+                    Thread.Sleep(5000);//Extra wait otherwise not alle songs are in the list en when selecting 'Alles' not all songs will be selected
+
+                    IWebElement defaultSite = wait.Until(drv => drv.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Default.aspx']")));
+                    defaultSite.Click();
+
+                    IWebElement downloadSite = wait.Until(drv => drv.FindElement(By.XPath("//a[@href='/site/nl/mijnliedboek/Download/default.aspx']")));
+                    downloadSite.Click();
+
                     try
                     {
-                        currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
-                    } catch (NoSuchElementException){
+                        IWebElement btnDownload = wait.Until(drv => drv.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")));
+                        btnDownload.Click();
+                    }
+                    catch (NoSuchElementException)
+                    {
                         currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnStartDownload']")).Click();
                         currentWebDriver.FindElement(By.XPath("//a[@class='focusButton dark-style btnDownload']")).Click();
                     }
-                    currentWebDriver.FindElement(By.XPath("//a[@href='https://liedboek.liedbundels.nu/download/liedlijsten/l12991/Standaard_liedlijst.zip']")).Click();
+
+                    IWebElement liedlijst = wait.Until(drv => drv.FindElement(By.XPath("//a[@href='https://liedboek.liedbundels.nu/download/liedlijsten/l12991/Standaard_liedlijst.zip']")));
+                    liedlijst.Click();
                     //Wait for downloading file
                     Thread.Sleep(Convert.ToInt32(waitToDownloadFile) * 1000);
                     GeneralFunctions.UnzipFiles(downloadDirectory + @"\" + "Standaard_liedlijst.zip", extractDirectory);
                     GeneralFunctions.DeleteFiles(@"Liedboek-licentie.txt", extractDirectory);
                     //File.Copy
                     foreach (String file in Directory.GetFiles(extractDirectory))
-                    File.Copy(file, Path.Combine(directoryName, order + "_" + Path.GetFileName(file)));
+                        File.Copy(file, Path.Combine(directoryName, order + "_" + Path.GetFileName(file)));
                 }
+
                 return true;
+            } catch (Exception e)
+            {
+                Console.WriteLine("Song " + song + " not downloaded:" + e.Message);
+                return false;
+            }
         }
 
         public Boolean ExtractSong()

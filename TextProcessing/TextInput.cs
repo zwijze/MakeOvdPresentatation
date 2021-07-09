@@ -11,11 +11,15 @@ namespace TextProcessing
 {
     public class TextInput
     {
-        private static Dictionary<int, String> _TextLines=new Dictionary<int, String>();
+        private Dictionary<int, String> _TextLines=new Dictionary<int, String>();
 
-        public static  Dictionary<int, String> TextLines=>_TextLines;
+        public  Dictionary<int, String> TextLines=>_TextLines;
 
-        public static void readText(String fileName)
+        public TextInput()
+        {
+
+        }
+        public void readText(String fileName)
         {
             List<String> tempTextLines =new List<String>();
             if (fileName.Equals("")) //Get from Clipboard

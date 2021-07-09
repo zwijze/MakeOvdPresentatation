@@ -31,20 +31,28 @@ namespace MakeOvdPresentatation
 
             //Create directory to put presentation atifacts
             String directoryName = CreateDirectory.CreateDirectoryIfNotExists(ConfigurationManager.AppSettings["DirectoryCreatePresentation"]);
-            log.Info($"Directory where presentation artifacts are stored: " + directoryName);
+            log.Info($"Directory where presentation artifacts will be stored: " + directoryName);
 
             //Read all lines from the Ovd
-            TextInput.readText(ConfigurationManager.AppSettings["filenameReadingText"]);
-            Dictionary<int, String> textLines = TextInput.TextLines;
+            TextInput textInput=new TextInput();
+            textInput.readText(ConfigurationManager.AppSettings["filenameReadingText"]);
+            Dictionary<int, String> textLines = textInput.TextLines;
 
             String goOnYN;
             if (textLines.Count <= 1)
             {
-                Console.WriteLine("Not many Liturgy text is being selected. Do you want to continue (y/n)?");
+                Console.WriteLine("Not many Liturgy text is being selected. Do you want to continue and copy data to the clipboard (again) (y/n)?");
                 goOnYN = Console.ReadLine().ToLower();
                 if (goOnYN.Equals("n"))
                 {
                     ExitProgram();
+                } else
+                {
+                    Console.WriteLine("Copy data to the clipboard (again). Press enter to continue.");
+                    Console.ReadLine().ToLower();
+                    textInput = new TextInput();
+                    textInput.readText(ConfigurationManager.AppSettings["filenameReadingText"]);
+                    textLines = textInput.TextLines;
                 }
             }
 
