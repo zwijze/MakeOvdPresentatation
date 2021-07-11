@@ -67,7 +67,7 @@ namespace DetermineActions
         public static bool DownLoadSongs(String line,String lineNext, String directoryName)
         {
             //Retrieve Liedboek  song
-            if (!line.ToLower().Contains("youtube.com") && !lineNext.ToLower().Contains("youtube.com") && Regex.Match(line.ToLower(), @"lied\s+\d+").Success)
+            if (!line.ToLower().Contains("youtube.com") && !lineNext.ToLower().Contains("youtube.com") && Regex.Match(line.ToLower(), @"lied\s+\d+").Success && !line.ToLower().Contains("opwekking"))
             {
                 order = order + 10;
                 var section = (General.Config.Section)ConfigurationManager.GetSection("SongsSection");

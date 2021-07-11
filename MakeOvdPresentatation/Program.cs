@@ -73,7 +73,18 @@ namespace MakeOvdPresentatation
                     ActionsToExecute.DownLoadSongs(textLineValue, nextTextLineValue, directoryName);
                 } else
                 {
-                    Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
+                    //Generate warning when other translations are present
+                    if (textLineValue.ToLower().Contains("gewone taal") || textLineValue.ToLower().Contains("vertaling"))
+                    {
+                        String message = "Let op: Mogelijke een andere vertaling is gewenst!!!";
+                        Console.WriteLine(message);
+                        Console.WriteLine(message);
+                        Console.WriteLine(message);
+                        Console.WriteLine(message);
+                        Console.WriteLine(message);
+
+                    }
+                        Thread newThread = new Thread(ActionsToExecute.ActionsToExecuteWrapper);
                     List<String> ActionsToExecuteWrapperParameters = new List<String>();
                     ActionsToExecuteWrapperParameters.Add(textLineValue);
                     ActionsToExecuteWrapperParameters.Add(previousTextLineValue);
@@ -111,6 +122,8 @@ namespace MakeOvdPresentatation
         }
         private static void ExitProgram()
         {
+            Console.WriteLine("ADDITIONAL WARNINGS!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Console.WriteLine("Let op: Controleer liederen op notentekens :+dikke verticale balk wat betekent dat een lied weer opnieuw moet worden gezongen!");
             Console.WriteLine("Program will stop. Press enter to exit.");
             Console.ReadLine().ToLower();
             Environment.Exit(1);

@@ -40,7 +40,7 @@ namespace Actions.HelperClasses
                 var service = ChromeDriverService.CreateDefaultService(ChromePath);
                 //service.LogPath = $"{ChromePath}\\chromedriver.log";
                 service.EnableVerboseLogging =false;
-                service.SuppressInitialDiagnosticInformation = false;
+                service.SuppressInitialDiagnosticInformation = true;
                 service.LogPath = null;
                 var options = new ChromeOptions();
                 options.AddArgument("no-sandbox");
